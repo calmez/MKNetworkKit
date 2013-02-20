@@ -88,7 +88,12 @@ OSStatus extractIdentityAndTrust(CFDataRef inPKCS12Data,
 @property (strong, nonatomic) NSError *error;
 
 - (id)initWithURLString:(NSString *)aURLString
-                 params:(NSDictionary *)body
+                 params:(NSDictionary *)params
+             httpMethod:(NSString *)method
+                timeOut:(NSTimeInterval) timeOutInSeconds;
+
+- (id)initWithURLString:(NSString *)aURLString
+                 params:(NSDictionary *)params
              httpMethod:(NSString *)method;
 
 -(NSData*) bodyData;
@@ -534,72 +539,85 @@ OSStatus extractIdentityAndTrust(CFDataRef inPKCS12Data,
 
 - (id)initWithURLString:(NSString *)aURLString
                  params:(NSDictionary *)params
-             httpMethod:(NSString *)method
+             httpMethod:(NSString *)method {
 
+    return [self initWithURLString:aURLString
+                            params:params
+                        httpMethod:method
+                           timeOut:kMKNetworkKitRequestTimeOutInSeconds];
+}
+
+- (id)initWithURLString:(NSString *)aURLString
+                 params:(NSDictionary *)params
+             httpMethod:(NSString *)method
+                timeOut:(NSTimeInterval) timeOutInSeconds
 {
-  if((self = [super init])) {
-    
-    self.responseBlocks = [NSMutableArray array];
-    self.errorBlocks = [NSMutableArray array];
-    self.errorBlocksType2 = [NSMutableArray array];
-    self.filesToBePosted = [NSMutableArray array];
-    self.dataToBePosted = [NSMutableArray array];
-    self.fieldsToBePosted = [NSMutableDictionary dictionary];
-    
-    self.notModifiedHandlers = [NSMutableArray array];
-    self.uploadProgressChangedHandlers = [NSMutableArray array];
-    self.downloadProgressChangedHandlers = [NSMutableArray array];
-    self.downloadStreams = [NSMutableArray array];
-    
-    self.credentialPersistence = NSURLCredentialPersistenceForSession;
-    
-    NSURL *finalURL = nil;
-    
-    if(params)
-      self.fieldsToBePosted = [params mutableCopy];
-    
-    self.stringEncoding = NSUTF8StringEncoding; // use a delegate to get these values later
-    
-    if(!method) method = @"GET";
-    
-    if ([method isEqualToString:@"GET"])
-      self.cacheHeaders = [NSMutableDictionary dictionary];
-    
-    if (([method isEqualToString:@"GET"] ||
-         [method isEqualToString:@"DELETE"]) && (params && [params count] > 0)) {
-      
-      finalURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", aURLString,
-                                       [self.fieldsToBePosted urlEncodedKeyValueString]]];
-    } else {
-      finalURL = [NSURL URLWithString:aURLString];
+
+    if((self = [super init])) {
+
+        self.responseBlocks = [NSMutableArray array];
+        self.errorBlocks = [NSMutableArray array];
+        self.errorBlocksType2 = [NSMutableArray array];
+        self.filesToBePosted = [NSMutableArray array];
+        self.dataToBePosted = [NSMutableArray array];
+        self.fieldsToBePosted = [NSMutableDictionary dictionary];
+
+        self.notModifiedHandlers = [NSMutableArray array];
+        self.uploadProgressChangedHandlers = [NSMutableArray array];
+        self.downloadProgressChangedHandlers = [NSMutableArray array];
+        self.downloadStreams = [NSMutableArray array];
+
+        self.credentialPersistence = NSURLCredentialPersistenceForSession;
+
+        NSURL *finalURL = nil;
+
+        if(params)
+            self.fieldsToBePosted = [params mutableCopy];
+
+        self.stringEncoding = NSUTF8StringEncoding; // use a delegate to get these values later
+
+        if(!method) method = @"GET";
+
+        if ([method isEqualToString:@"GET"])
+            self.cacheHeaders = [NSMutableDictionary dictionary];
+
+        if (([method isEqualToString:@"GET"] ||
+                [method isEqualToString:@"DELETE"]) && (params && [params count] > 0)) {
+
+            finalURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", aURLString,
+                                                                       [self.fieldsToBePosted urlEncodedKeyValueString]]];
+        } else {
+            finalURL = [NSURL URLWithString:aURLString];
+        }
+
+        if(finalURL == nil) {
+
+            DLog(@"Cannot create a URL with %@ and parameters %@ and method %@", aURLString, self.fieldsToBePosted, method);
+            return nil;
+        }
+
+
+        self.request = [NSMutableURLRequest requestWithURL:finalURL
+                                               cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
+                                           timeoutInterval:timeOutInSeconds];
+
+        [self.request setHTTPMethod:method];
+
+        [self.request setValue:[NSString stringWithFormat:@"%@, en-us",
+                                                          [[NSLocale preferredLanguages] componentsJoinedByString:@", "]
+        ] forHTTPHeaderField:@"Accept-Language"];
+
+        if (([method isEqualToString:@"POST"] ||
+                [method isEqualToString:@"PUT"]) && (params && [params count] > 0)) {
+
+            self.postDataEncoding = MKNKPostDataEncodingTypeURL;
+        }
+
+        self.state = MKNetworkOperationStateReady;
     }
-    
-    if(finalURL == nil) {
-      
-      DLog(@"Cannot create a URL with %@ and parameters %@ and method %@", aURLString, self.fieldsToBePosted, method);
-      return nil;
-    }
-    
-    self.request = [NSMutableURLRequest requestWithURL:finalURL
-                                           cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
-                                       timeoutInterval:kMKNetworkKitRequestTimeOutInSeconds];
-    
-    [self.request setHTTPMethod:method];
-    
-    [self.request setValue:[NSString stringWithFormat:@"%@, en-us",
-                            [[NSLocale preferredLanguages] componentsJoinedByString:@", "]
-                            ] forHTTPHeaderField:@"Accept-Language"];
-    
-    if (([method isEqualToString:@"POST"] ||
-         [method isEqualToString:@"PUT"]) && (params && [params count] > 0)) {
-      
-      self.postDataEncoding = MKNKPostDataEncodingTypeURL;
-    }
-    
-    self.state = MKNetworkOperationStateReady;
-  }
-  
-  return self;
+
+    return self;
+
 }
 
 -(void) addParams:(NSDictionary*) paramsDictionary {

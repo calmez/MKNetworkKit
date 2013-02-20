@@ -304,9 +304,24 @@ static NSOperationQueue *_sharedNetworkQueue;
   self.customOperationSubclass = aClass;
 }
 
+-(MKNetworkOperation*) operationWithPath:(NSString*) path
+                                 timeOut:(NSTimeInterval) timeOutInSeconds {
+
+    return [self operationWithPath:path params:nil timeOut:timeOutInSeconds];
+}
+
 -(MKNetworkOperation*) operationWithPath:(NSString*) path {
   
-  return [self operationWithPath:path params:nil];
+  return [self operationWithPath:path timeOut:kMKNetworkKitRequestTimeOutInSeconds];
+}
+
+-(MKNetworkOperation*) operationWithPath:(NSString*) path
+                                  params:(NSDictionary*) body
+                                 timeOut:(NSTimeInterval) timeOutInSeconds {
+
+    return [self operationWithPath:path
+                            params:body
+                        httpMethod:@"GET" timeOut:timeOutInSeconds];
 }
 
 -(MKNetworkOperation*) operationWithPath:(NSString*) path
@@ -314,67 +329,103 @@ static NSOperationQueue *_sharedNetworkQueue;
   
   return [self operationWithPath:path
                           params:body
-                      httpMethod:@"GET"];
+                      httpMethod:@"GET" timeOut:kMKNetworkKitRequestTimeOutInSeconds];
 }
 
 -(MKNetworkOperation*) operationWithPath:(NSString*) path
                                   params:(NSDictionary*) body
-                              httpMethod:(NSString*)method  {
+                              httpMethod:(NSString*)method
+                                 timeOut:(NSTimeInterval) timeOutInSeconds {
   
-  return [self operationWithPath:path params:body httpMethod:method ssl:NO];
+  return [self operationWithPath:path params:body httpMethod:method ssl:NO timeOut:timeOutInSeconds];
+}
+
+-(MKNetworkOperation*) operationWithPath:(NSString*) path
+                                  params:(NSDictionary*) body
+                              httpMethod:(NSString*)method {
+
+    return [self operationWithPath:path params:body httpMethod:method timeOut:kMKNetworkKitRequestTimeOutInSeconds];
+}
+
+-(MKNetworkOperation*) operationWithPath:(NSString*) path
+                                  params:(NSDictionary*) body
+                              httpMethod:(NSString*)method
+                                     ssl:(BOOL) useSSL
+                                 timeOut:(NSTimeInterval) timeOutInSeconds {
+
+    if(self.hostName == nil) {
+
+        DLog(@"Hostname is nil, use operationWithURLString: method to create absolute URL operations");
+        return nil;
+    }
+
+    NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@://%@", useSSL ? @"https" : @"http", self.hostName];
+
+    if(self.portNumber != 0)
+        [urlString appendFormat:@":%d", self.portNumber];
+
+    if(self.apiPath)
+        [urlString appendFormat:@"/%@", self.apiPath];
+
+    if(![path isEqualToString:@"/"]) { // fetch for root?
+
+        if(path.length > 0 && [path characterAtIndex:0] == '/') // if user passes /, don't prefix a slash
+            [urlString appendFormat:@"%@", path];
+        else if (path != nil)
+            [urlString appendFormat:@"/%@", path];
+    }
+
+
+    return [self operationWithURLString:urlString params:body httpMethod:method timeOut:timeOutInSeconds];
 }
 
 -(MKNetworkOperation*) operationWithPath:(NSString*) path
                                   params:(NSDictionary*) body
                               httpMethod:(NSString*)method
                                      ssl:(BOOL) useSSL {
-  
-  if(self.hostName == nil) {
-    
-    DLog(@"Hostname is nil, use operationWithURLString: method to create absolute URL operations");
-    return nil;
-  }
-  
-  NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@://%@", useSSL ? @"https" : @"http", self.hostName];
-  
-  if(self.portNumber != 0)
-    [urlString appendFormat:@":%d", self.portNumber];
-  
-  if(self.apiPath)
-    [urlString appendFormat:@"/%@", self.apiPath];
-  
-  if(![path isEqualToString:@"/"]) { // fetch for root?
-    
-    if(path.length > 0 && [path characterAtIndex:0] == '/') // if user passes /, don't prefix a slash
-      [urlString appendFormat:@"%@", path];
-    else if (path != nil)
-      [urlString appendFormat:@"/%@", path];
-  }
 
-  
-  return [self operationWithURLString:urlString params:body httpMethod:method];
+  return [self operationWithPath:path params:body httpMethod:method ssl:useSSL timeOut:kMKNetworkKitRequestTimeOutInSeconds];
+}
+
+-(MKNetworkOperation*) operationWithURLString:(NSString*) urlString timeOut:(NSTimeInterval) timeOutInSeconds {
+
+    return [self operationWithURLString:urlString params:nil httpMethod:@"GET" timeOut:timeOutInSeconds];
 }
 
 -(MKNetworkOperation*) operationWithURLString:(NSString*) urlString {
   
-  return [self operationWithURLString:urlString params:nil httpMethod:@"GET"];
+  return [self operationWithURLString:urlString params:nil httpMethod:@"GET" timeOut:kMKNetworkKitRequestTimeOutInSeconds];
 }
 
 -(MKNetworkOperation*) operationWithURLString:(NSString*) urlString
                                        params:(NSDictionary*) body {
+
+    return [self operationWithURLString:urlString params:body httpMethod:@"GET" timeOut:kMKNetworkKitRequestTimeOutInSeconds];
+}
+
+-(MKNetworkOperation*) operationWithURLString:(NSString*) urlString
+                                       params:(NSDictionary*) body
+                                      timeOut:(NSTimeInterval) timeOutInSeconds{
   
-  return [self operationWithURLString:urlString params:body httpMethod:@"GET"];
+  return [self operationWithURLString:urlString params:body httpMethod:@"GET" timeOut:timeOutInSeconds];
 }
 
 
 -(MKNetworkOperation*) operationWithURLString:(NSString*) urlString
                                        params:(NSDictionary*) body
+                                   httpMethod:(NSString*)method timeOut:(NSTimeInterval) timeOutInSeconds {
+
+    MKNetworkOperation *operation = [[self.customOperationSubclass alloc] initWithURLString:urlString params:body httpMethod:method timeOut:timeOutInSeconds];
+
+    [self prepareHeaders:operation];
+    return operation;
+}
+
+-(MKNetworkOperation*) operationWithURLString:(NSString*) urlString
+                                       params:(NSDictionary*) body
                                    httpMethod:(NSString*)method {
   
-  MKNetworkOperation *operation = [[self.customOperationSubclass alloc] initWithURLString:urlString params:body httpMethod:method];
-  
-  [self prepareHeaders:operation];
-  return operation;
+    return [self operationWithURLString:urlString params:body httpMethod:method timeOut:kMKNetworkKitRequestTimeOutInSeconds];
 }
 
 -(void) prepareHeaders:(MKNetworkOperation*) operation {

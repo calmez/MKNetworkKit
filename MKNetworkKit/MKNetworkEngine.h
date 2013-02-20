@@ -80,16 +80,43 @@
 - (id) initWithHostName:(NSString*) hostName apiPath:(NSString*) apiPath customHeaderFields:(NSDictionary*) headers;
 
 /*!
+ *  @abstract Creates a simple GET Operation with a request URL with a timeout value in seconds
+ *
+ *  @discussion
+ *	Creates an operation with the given URL path.
+ *  The default headers you specified in your MKNetworkEngine subclass gets added to the headers
+ *  The HTTP Method is implicitly assumed to be GET
+ *
+ */
+-(MKNetworkOperation*) operationWithPath:(NSString*) path
+                                 timeOut:(NSTimeInterval) timeOutInSeconds;
+
+/*!
  *  @abstract Creates a simple GET Operation with a request URL
  *  
  *  @discussion
  *	Creates an operation with the given URL path.
  *  The default headers you specified in your MKNetworkEngine subclass gets added to the headers
  *  The HTTP Method is implicitly assumed to be GET
- *  
+ *  Internally calls operationWithPath:timeOut: with a default timeout value
+ *  defined by kMKNetworkKitRequestTimeOutInSeconds
+ *
  */
-
 -(MKNetworkOperation*) operationWithPath:(NSString*) path;
+
+/*!
+ *  @abstract Creates a simple GET Operation with a request URL and parameters with a timeout value in seconds
+ *
+ *  @discussion
+ *	Creates an operation with the given URL path with a timeout value in seconds.
+ *  The default headers you specified in your MKNetworkEngine subclass gets added to the headers
+ *  The body dictionary in this method gets attached to the URL as query parameters
+ *  The HTTP Method is implicitly assumed to be GET
+ *
+ */
+-(MKNetworkOperation*) operationWithPath:(NSString*) path
+                                  params:(NSDictionary*) body
+                                 timeOut:(NSTimeInterval) timeOutInSeconds;
 
 /*!
  *  @abstract Creates a simple GET Operation with a request URL and parameters
@@ -99,28 +126,71 @@
  *  The default headers you specified in your MKNetworkEngine subclass gets added to the headers
  *  The body dictionary in this method gets attached to the URL as query parameters
  *  The HTTP Method is implicitly assumed to be GET
- *  
+ *  Internally calls operationWithPath:params:timeOut: with a default timeout value
+ *  defined by kMKNetworkKitRequestTimeOutInSeconds
+ *
  */
 -(MKNetworkOperation*) operationWithPath:(NSString*) path
-                         params:(NSDictionary*) body;
+                                  params:(NSDictionary*) body;
+
+/*!
+ *  @abstract Creates a simple GET Operation with a request URL, parameters and HTTP Method with
+ *  a timeout value in seconds
+ *  
+ *  @discussion
+ *	Creates an operation with the given URL path with a timeout value in seconds.
+ *  The default headers you specified in your MKNetworkEngine subclass gets added to the headers
+ *  The params dictionary in this method gets attached to the URL as query parameters if the HTTP Method is GET/DELETE
+ *  The params dictionary is attached to the body if the HTTP Method is POST/PUT
+ *  The HTTP Method is implicitly assumed to be GET
+ *
+ */
+-(MKNetworkOperation*) operationWithPath:(NSString*) path
+                                  params:(NSDictionary*) body
+                              httpMethod:(NSString*)method
+                                 timeOut:(NSTimeInterval) timeOutInSeconds;
 
 /*!
  *  @abstract Creates a simple GET Operation with a request URL, parameters and HTTP Method
- *  
+ *
  *  @discussion
  *	Creates an operation with the given URL path.
  *  The default headers you specified in your MKNetworkEngine subclass gets added to the headers
  *  The params dictionary in this method gets attached to the URL as query parameters if the HTTP Method is GET/DELETE
  *  The params dictionary is attached to the body if the HTTP Method is POST/PUT
  *  The HTTP Method is implicitly assumed to be GET
+ *  Internally calls operationWithPath:params:httpMethod:timeOut: with a default timeout value
+ *  defined by kMKNetworkKitRequestTimeOutInSeconds
+ *
  */
 -(MKNetworkOperation*) operationWithPath:(NSString*) path
-                         params:(NSDictionary*) body
-                   httpMethod:(NSString*)method;
+                                  params:(NSDictionary*) body
+                              httpMethod:(NSString*)method;
+
+/*!
+ *  @abstract Creates a simple GET Operation with a request URL, parameters, HTTP Method, the SSL switch with
+ *  a timeout value in seconds
+ *  
+ *  @discussion
+ *	Creates an operation with the given URL path with a timeout value in seconds.
+ *  The ssl option when true changes the URL to https.
+ *  The ssl option when false changes the URL to http.
+ *  The default headers you specified in your MKNetworkEngine subclass gets added to the headers
+ *  The params dictionary in this method gets attached to the URL as query parameters if the HTTP Method is GET/DELETE
+ *  The params dictionary is attached to the body if the HTTP Method is POST/PUT
+ *  The previously mentioned method operationWithPath:params:httpMethod:timeOut: calls this internally
+ *
+ */
+
+-(MKNetworkOperation*) operationWithPath:(NSString*) path
+                                  params:(NSDictionary*) body
+                              httpMethod:(NSString*)method
+                                     ssl:(BOOL) useSSL
+                                 timeOut:(NSTimeInterval) timeOutInSeconds;
 
 /*!
  *  @abstract Creates a simple GET Operation with a request URL, parameters, HTTP Method and the SSL switch
- *  
+ *
  *  @discussion
  *	Creates an operation with the given URL path.
  *  The ssl option when true changes the URL to https.
@@ -128,12 +198,26 @@
  *  The default headers you specified in your MKNetworkEngine subclass gets added to the headers
  *  The params dictionary in this method gets attached to the URL as query parameters if the HTTP Method is GET/DELETE
  *  The params dictionary is attached to the body if the HTTP Method is POST/PUT
- *  The previously mentioned methods operationWithPath: and operationWithPath:params: call this internally
+ *  Internally calls operationWithPath:params:httpMethod:ssl:timeOut: with a default timeout value
+ *  defined by kMKNetworkKitRequestTimeOutInSeconds
+ *
  */
 -(MKNetworkOperation*) operationWithPath:(NSString*) path
-                         params:(NSDictionary*) body
-                   httpMethod:(NSString*)method 
-                          ssl:(BOOL) useSSL;
+                                  params:(NSDictionary*) body
+                              httpMethod:(NSString*)method
+                                     ssl:(BOOL) useSSL;
+
+/*!
+ *  @abstract Creates a simple GET Operation with a request URL with a timeout value in seconds
+ *
+ *  @discussion
+ *	Creates an operation with the given absolute URL with a timeout value in seconds.
+ *  The hostname of the engine is *NOT* prefixed
+ *  The default headers you specified in your MKNetworkEngine subclass gets added to the headers
+ *  The HTTP method is implicitly assumed to be GET.
+ *
+ */
+-(MKNetworkOperation*) operationWithURLString:(NSString*) urlString timeOut:(NSTimeInterval) timeOutInSeconds;
 
 /*!
  *  @abstract Creates a simple GET Operation with a request URL
@@ -143,6 +227,7 @@
  *  The hostname of the engine is *NOT* prefixed
  *  The default headers you specified in your MKNetworkEngine subclass gets added to the headers
  *  The HTTP method is implicitly assumed to be GET.
+ *
  */
 -(MKNetworkOperation*) operationWithURLString:(NSString*) urlString;
 
@@ -155,15 +240,19 @@
  *  The default headers you specified in your MKNetworkEngine subclass gets added to the headers
  *  The body dictionary in this method gets attached to the URL as query parameters
  *  The HTTP method is implicitly assumed to be GET.
+ *  Internally calls operationWithURLString:timeOut: with a default timeout value
+ *  defined by kMKNetworkKitRequestTimeOutInSeconds
+  *
  */
 -(MKNetworkOperation*) operationWithURLString:(NSString*) urlString
                                        params:(NSDictionary*) body;
 
 /*!
- *  @abstract Creates a simple Operation with a request URL, parameters and HTTP Method
+ *  @abstract Creates a simple Operation with a request URL, parameters and HTTP Method with a timeout value
+ *  in seconds
  *  
  *  @discussion
- *	Creates an operation with the given absolute URL.
+ *	Creates an operation with the given absolute URL with a timeout value in seconds.
  *  The hostname of the engine is *NOT* prefixed
  *  The default headers you specified in your MKNetworkEngine subclass gets added to the headers
  *  The params dictionary in this method gets attached to the URL as query parameters if the HTTP Method is GET/DELETE
@@ -174,9 +263,29 @@
  *  prepareHeaders:
  */
 -(MKNetworkOperation*) operationWithURLString:(NSString*) urlString
-                              params:(NSDictionary*) body
-                        httpMethod:(NSString*) method;
+                                       params:(NSDictionary*) body
+                                   httpMethod:(NSString*) method
+                                      timeOut:(NSTimeInterval) timeOutInSeconds;
 
+/*!
+ *  @abstract Creates a simple Operation with a request URL, parameters and HTTP Method
+ *
+ *  @discussion
+ *	Creates an operation with the given absolute URL.
+ *  The hostname of the engine is *NOT* prefixed
+ *  The default headers you specified in your MKNetworkEngine subclass gets added to the headers
+ *  The params dictionary in this method gets attached to the URL as query parameters if the HTTP Method is GET/DELETE
+ *  The params dictionary is attached to the body if the HTTP Method is POST/PUT
+ *	This method can be over-ridden by subclasses to tweak the operation creation mechanism.
+ *  You would typically over-ride this method to create a subclass of MKNetworkOperation (if you have one). After you create it, you should call [super prepareHeaders:operation] to attach any custom headers from super class.
+ *  Internally calls operationWithURLString:params:httpMethod:timeOut with a default timeout value
+ *  defined by kMKNetworkKitRequestTimeOutInSeconds
+ *  @seealso
+ *  prepareHeaders:
+ */
+-(MKNetworkOperation*) operationWithURLString:(NSString*) urlString
+                                       params:(NSDictionary*) body
+                                   httpMethod:(NSString*) method;
 /*!
  *  @abstract adds the custom default headers
  *  

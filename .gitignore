@@ -13,12 +13,5 @@ profile
 *.moved-aside
 .DS_Store
 
-.idea/vcs.xml
+.idea
 .gitignore
-.idea/.name
-.idea/encodings.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/scopes/scope_settings.xml
-.idea/workspace.xml
-.idea/xcode.xml
