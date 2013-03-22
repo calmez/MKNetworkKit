@@ -27,22 +27,30 @@
 
 @implementation NSDictionary (RequestEncoding)
 
--(NSString*) urlEncodedKeyValueString {
-  
+-(NSString*) urlEncodedKeyValueStringUsingKeyFormat:(NSString *)formatString {
+
   NSMutableString *string = [NSMutableString string];
   for (NSString *key in self) {
-    
-    NSObject *value = [self valueForKey:key];
-    if([value isKindOfClass:[NSString class]])
-      [string appendFormat:@"%@=%@&", [key mk_urlEncodedString], [((NSString*)value) mk_urlEncodedString]];
-    else
-      [string appendFormat:@"%@=%@&", [key mk_urlEncodedString], value];
+      NSString *keyString = [NSString stringWithFormat:formatString, [key mk_urlEncodedString]];
+      NSObject *value = [self valueForKey:key];
+    if([value isKindOfClass:[NSString class]]) {
+      [string appendFormat:@"%@=%@&", keyString, [((NSString*)value) mk_urlEncodedString]];
+    } else if([value isKindOfClass:[NSDictionary class]]) {
+      [string appendFormat:@"%@&", [(NSDictionary *)value urlEncodedKeyValueStringUsingKeyFormat:[keyString stringByAppendingString:@"[%@]"]]];
+    } else {
+      [string appendFormat:@"%@=%@&", keyString, value];
+    }
   }
   
   if([string length] > 0)
     [string deleteCharactersInRange:NSMakeRange([string length] - 1, 1)];
   
   return string;
+}
+
+-(NSString*) urlEncodedKeyValueString {
+
+    return [self urlEncodedKeyValueStringUsingKeyFormat:@"%@"];
 }
 
 
