@@ -656,10 +656,7 @@ OSStatus extractIdentityAndTrust(CFDataRef inPKCS12Data,
     
     NSString *option = [self.filesToBePosted count] == 0 ? @"-d" : @"-F";
     if(self.postDataEncoding == MKNKPostDataEncodingTypeURL) {
-      [self.fieldsToBePosted enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        
-        [displayString appendFormat:@" %@ \'%@=%@\'", option, key, obj];
-      }];
+      [displayString appendFormat:@" %@ \'%@\'", option, [self.fieldsToBePosted urlEncodedKeyValueString]];
     } else {
       [displayString appendFormat:@" -d \'%@\'", [self encodedPostDataString]];
     }
