@@ -737,7 +737,7 @@ OSStatus extractIdentityAndTrust(CFDataRef inPKCS12Data,
       buildDispositionString = [^(id key, id obj){
       if ([obj isKindOfClass:[NSString class]]) {
         return [[NSString stringWithFormat:
-                @"--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@",
+                @"--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@\r\n",
                 boundary, key,obj] copy];
       } else if ([obj isKindOfClass:[NSDictionary class]]) {
         NSString *result = @"";
@@ -756,7 +756,6 @@ OSStatus extractIdentityAndTrust(CFDataRef inPKCS12Data,
 #pragma clang diagnostic pop
 
     [body appendData:[thisFieldString dataUsingEncoding:[self stringEncoding]]];
-    [body appendData:[@"\r\n" dataUsingEncoding:[self stringEncoding]]];
   }];
   
   [self.filesToBePosted enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
