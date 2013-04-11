@@ -749,7 +749,7 @@ OSStatus extractIdentityAndTrust(CFDataRef inPKCS12Data,
         }
         return [result copy];
       }
-      return [@"" copy];
+      return (id) @"";
     } copy];
     NSString *thisFieldString = buildDispositionString(key, obj);
     buildDispositionString = NULL;
