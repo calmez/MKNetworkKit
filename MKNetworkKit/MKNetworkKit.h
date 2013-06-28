@@ -66,6 +66,7 @@
 
 #import "NSString+MKNetworkKitAdditions.h"
 #import "NSDictionary+RequestEncoding.h"
+#import "NSArray+RequestEncoding.h"
 #import "NSDate+RFC1123.h"
 #import "NSData+MKBase64.h"
 #import "UIImageView+MKNetworkKitAdditions.h"

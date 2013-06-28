@@ -26,6 +26,7 @@
 @interface NSDictionary (RequestEncoding)
 
 -(NSString*) urlEncodedKeyValueString;
+-(NSString*) urlEncodedKeyValueStringUsingKeyFormat:(NSString *)formatString;
 -(NSString*) jsonEncodedKeyValueString;
 -(NSString*) plistEncodedKeyValueString;
 @end

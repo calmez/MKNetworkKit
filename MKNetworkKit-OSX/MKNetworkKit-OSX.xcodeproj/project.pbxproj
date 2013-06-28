@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		79116795177DCC4F008DCBD1 /* NSArray+RequestEncoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 79116793177DCC4F008DCBD1 /* NSArray+RequestEncoding.h */; };
+		79116796177DCC4F008DCBD1 /* NSArray+RequestEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 79116794177DCC4F008DCBD1 /* NSArray+RequestEncoding.m */; };
 		AB3A309C148F0A4400D06246 /* NSDate+RFC1123.h in Headers */ = {isa = PBXBuildFile; fileRef = AB3A309A148F0A4400D06246 /* NSDate+RFC1123.h */; };
 		AB3A309D148F0A4400D06246 /* NSDate+RFC1123.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3A309B148F0A4400D06246 /* NSDate+RFC1123.m */; };
 		AB3A30A6148F0B8C00D06246 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB3A30A5148F0B8C00D06246 /* Security.framework */; };
@@ -29,6 +31,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		79116793177DCC4F008DCBD1 /* NSArray+RequestEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+RequestEncoding.h"; sourceTree = "<group>"; };
+		79116794177DCC4F008DCBD1 /* NSArray+RequestEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+RequestEncoding.m"; sourceTree = "<group>"; };
 		AB3A309A148F0A4400D06246 /* NSDate+RFC1123.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+RFC1123.h"; sourceTree = "<group>"; };
 		AB3A309B148F0A4400D06246 /* NSDate+RFC1123.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+RFC1123.m"; sourceTree = "<group>"; };
 		AB3A30A5148F0B8C00D06246 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -137,6 +141,8 @@
 				AB3A309B148F0A4400D06246 /* NSDate+RFC1123.m */,
 				ABB5C28D148B3B160056D3E9 /* NSDictionary+RequestEncoding.h */,
 				ABB5C28E148B3B160056D3E9 /* NSDictionary+RequestEncoding.m */,
+				79116793177DCC4F008DCBD1 /* NSArray+RequestEncoding.h */,
+				79116794177DCC4F008DCBD1 /* NSArray+RequestEncoding.m */,
 				ABB5C28F148B3B160056D3E9 /* NSString+MKNetworkKitAdditions.h */,
 				ABB5C290148B3B160056D3E9 /* NSString+MKNetworkKitAdditions.m */,
 				AB8AF0C8148B445200ECE140 /* NSAlert+MKNetworkKitAdditions.h */,
@@ -172,6 +178,7 @@
 				AB8AF0CA148B445200ECE140 /* NSAlert+MKNetworkKitAdditions.h in Headers */,
 				AB3A309C148F0A4400D06246 /* NSDate+RFC1123.h in Headers */,
 				ABDC974A1498A8B60034CEBE /* NSData+MKBase64.h in Headers */,
+				79116795177DCC4F008DCBD1 /* NSArray+RequestEncoding.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -234,6 +241,7 @@
 				AB8AF0CB148B445200ECE140 /* NSAlert+MKNetworkKitAdditions.m in Sources */,
 				AB3A309D148F0A4400D06246 /* NSDate+RFC1123.m in Sources */,
 				ABDC974B1498A8B60034CEBE /* NSData+MKBase64.m in Sources */,
+				79116796177DCC4F008DCBD1 /* NSArray+RequestEncoding.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

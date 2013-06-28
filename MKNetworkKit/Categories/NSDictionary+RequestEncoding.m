@@ -39,6 +39,10 @@
       if ([(NSDictionary *)value count] > 0) {
         [string appendFormat:@"%@&", [(NSDictionary *)value urlEncodedKeyValueStringUsingKeyFormat:[keyString stringByAppendingString:@"[%@]"]]];
       }
+    } else if([value isKindOfClass:[NSArray class]]) {
+      if ([(NSArray *)value count] > 0) {
+        [string appendFormat:@"%@&", [(NSArray *)value urlEncodedKeyValueStringUsingKeyFormat:keyString]];
+      }
     } else {
       [string appendFormat:@"%@=%@&", keyString, value];
     }
@@ -49,6 +53,7 @@
   
   return string;
 }
+
 
 -(NSString*) urlEncodedKeyValueString {
 

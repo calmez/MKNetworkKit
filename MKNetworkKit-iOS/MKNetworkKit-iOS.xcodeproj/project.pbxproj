@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		79116791177DC911008DCBD1 /* NSArray+RequestEncoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 7911678F177DC911008DCBD1 /* NSArray+RequestEncoding.h */; };
+		79116792177DC911008DCBD1 /* NSArray+RequestEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 79116790177DC911008DCBD1 /* NSArray+RequestEncoding.m */; };
 		AB3A308A148F099C00D06246 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB3A3089148F099C00D06246 /* Security.framework */; };
 		AB3A3098148F0A3B00D06246 /* NSDate+RFC1123.h in Headers */ = {isa = PBXBuildFile; fileRef = AB3A3096148F0A3B00D06246 /* NSDate+RFC1123.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AB3A3099148F0A3B00D06246 /* NSDate+RFC1123.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3A3097148F0A3B00D06246 /* NSDate+RFC1123.m */; };
@@ -33,6 +35,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7911678F177DC911008DCBD1 /* NSArray+RequestEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+RequestEncoding.h"; sourceTree = "<group>"; };
+		79116790177DC911008DCBD1 /* NSArray+RequestEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+RequestEncoding.m"; sourceTree = "<group>"; };
 		AB3A3089148F099C00D06246 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		AB3A3096148F0A3B00D06246 /* NSDate+RFC1123.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+RFC1123.h"; sourceTree = "<group>"; };
 		AB3A3097148F0A3B00D06246 /* NSDate+RFC1123.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+RFC1123.m"; sourceTree = "<group>"; };
@@ -135,6 +139,8 @@
 				ABE5A85E165B5A34001F93EF /* NSData+MKBase64.m */,
 				ABB5C2AA148B3B360056D3E9 /* NSDictionary+RequestEncoding.h */,
 				ABB5C2AB148B3B360056D3E9 /* NSDictionary+RequestEncoding.m */,
+				7911678F177DC911008DCBD1 /* NSArray+RequestEncoding.h */,
+				79116790177DC911008DCBD1 /* NSArray+RequestEncoding.m */,
 				ABB5C2AC148B3B360056D3E9 /* NSString+MKNetworkKitAdditions.h */,
 				ABB5C2AD148B3B360056D3E9 /* NSString+MKNetworkKitAdditions.m */,
 				ABB5C2AE148B3B360056D3E9 /* UIAlertView+MKNetworkKitAdditions.h */,
@@ -181,6 +187,7 @@
 				AB3A3098148F0A3B00D06246 /* NSDate+RFC1123.h in Headers */,
 				ABE5A85F165B5A34001F93EF /* NSData+MKBase64.h in Headers */,
 				ABFC7C8C16A92BE500386599 /* UIImageView+MKNetworkKitAdditions.h in Headers */,
+				79116791177DC911008DCBD1 /* NSArray+RequestEncoding.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,6 +251,7 @@
 				AB3A3099148F0A3B00D06246 /* NSDate+RFC1123.m in Sources */,
 				ABE5A860165B5A34001F93EF /* NSData+MKBase64.m in Sources */,
 				ABFC7C8D16A92BE500386599 /* UIImageView+MKNetworkKitAdditions.m in Sources */,
+				79116792177DC911008DCBD1 /* NSArray+RequestEncoding.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
