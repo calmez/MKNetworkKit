@@ -375,7 +375,7 @@
  *	Cancels all operations in the shared queue that matches a given string. This string could be your host name or a path
  *
  */
-+(void) cancelOperationsContainingURLString:(NSString*) string;
++(NSInteger) cancelOperationsContainingURLString:(NSString*) string;
 
 /*!
  *  @abstract Cancels all operations created by this engine

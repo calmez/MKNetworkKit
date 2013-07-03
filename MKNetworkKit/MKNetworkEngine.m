@@ -237,17 +237,20 @@ static NSOperationQueue *_sharedNetworkQueue;
   }
 }
 
-+(void) cancelOperationsContainingURLString:(NSString*) string {
++(NSInteger) cancelOperationsContainingURLString:(NSString*) string {
   
+  __block NSInteger canceledOperations = 0;
   NSArray *runningOperations = _sharedNetworkQueue.operations;
   [runningOperations enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     
     MKNetworkOperation *thisOperation = obj;
     if([[thisOperation.readonlyRequest.URL absoluteString] rangeOfString:string].location != NSNotFound) {
     
+      canceledOperations++;
       [thisOperation cancel];
     }
   }];
+  return canceledOperations;
 }
 
 -(void) cancelAllOperations {
