@@ -14,7 +14,7 @@
     
     NSMutableString *string = [NSMutableString string];
     for (NSObject *value in self) {
-        NSString *keyString = formatString;
+        NSString *keyString = [formatString stringByAppendingString:@"[]"];
         if([value isKindOfClass:[NSString class]]) {
             [string appendFormat:@"%@=%@&", keyString, [((NSString*)value) mk_urlEncodedString]];
         } else if([value isKindOfClass:[NSDictionary class]]) {
